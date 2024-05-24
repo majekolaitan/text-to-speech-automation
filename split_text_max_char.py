@@ -2,20 +2,19 @@ import os
 
 def split_file(input_file, max_chars):
     with open(input_file, 'r') as f:
-        data = f.read()
+        lines = f.readlines()
 
     chunks = []
     current_chunk = ""
     current_length = 0
-    for word in data.split():
-        word_length = len(word)
-        if current_length + word_length <= max_chars:
-            current_chunk += word + " "
-            current_length += word_length + 1
+    for line in lines:
+        if current_length + len(line) <= max_chars:
+            current_chunk += line
+            current_length += len(line)
         else:
             chunks.append(current_chunk.strip())
-            current_chunk = word + " "
-            current_length = word_length + 1
+            current_chunk = line
+            current_length = len(line)
 
     # Add the last chunk
     if current_chunk:
