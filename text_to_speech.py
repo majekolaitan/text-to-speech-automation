@@ -4,6 +4,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import re
 
 driver = webdriver.Chrome()
 
@@ -31,8 +32,8 @@ time.sleep(2)
 
 input_folder = 'output'
 
-# Get sorted list of file names from input folder
-file_names = sorted(os.listdir(input_folder))
+# Get sorted list of file names from input folder with custom sorting key
+file_names = sorted(os.listdir(input_folder), key=lambda x: int(re.search(r'(\d+)', x).group(1)))
 
 for file_name in file_names:
     file_path = os.path.join(input_folder, file_name)
