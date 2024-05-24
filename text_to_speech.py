@@ -4,6 +4,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.keys import Keys
 import re
 
 driver = webdriver.Chrome()
@@ -25,7 +26,17 @@ driver.find_element(By.ID, password_id).send_keys(your_password)
 
 time.sleep(20)
 
-voice_element = driver.find_element(By.ID, 'ttsVoiceDiven-US-SaraNeural')
+language_selector  = driver.find_element(By.ID, 'select2-ttp-language-container')
+language_selector.click()
+time.sleep(2)
+# language_select  = driver.find_element(By.ID, 'select2-ttp-language-result-63de-en-CA')
+# language_select.click()
+focused_element = driver.switch_to.active_element
+focused_element.send_keys("Canada")
+time.sleep(1)
+focused_element.send_keys(Keys.ENTER)
+time.sleep(2)
+voice_element = driver.find_element(By.ID, 'ttsVoiceDiven-CA-ClaraNeural')
 voice_element.click()
 
 time.sleep(2)
