@@ -8,8 +8,13 @@ def find_sentence_boundary(chunk):
     return None
 
 def split_file(input_file, max_chars):
+    # Create output folder if it doesn't exist
+    output_folder = 'output'
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+
     with open(input_file, 'r') as f:
-        lines = f.readlines()
+        lines = filter(lambda x: x.strip(), f.readlines())
 
     sections = {}
     current_section = None
@@ -46,7 +51,7 @@ def split_file(input_file, max_chars):
 
         # Write chunks to files
         for i, chunk in enumerate(chunks):
-            output_file = f"{os.path.splitext(input_file)[0]}_{section.replace(' ', '').replace(':', '')}_part{i+1}.txt"
+            output_file = os.path.join(output_folder, f"{os.path.splitext(input_file)[0]}_{section.replace(' ', '').replace(':', '')}_part{i+1}.txt")
             with open(output_file, 'w') as f:
                 f.write(f"{section} - Part {chr(ord('a') + i)}\n\n{chunk}")
 
