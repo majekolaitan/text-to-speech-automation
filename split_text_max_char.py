@@ -57,5 +57,5 @@ def split_file(input_file, max_chars):
 
 # Example usage:
 input_file = 'input.txt'
-max_chars = 1000  # Adjust this value as needed
+max_chars = 4800  # Adjust this value as needed
 split_file(input_file, max_chars)
