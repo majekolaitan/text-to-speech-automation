@@ -1,61 +1,50 @@
 import os
 
-def find_sentence_boundary(chunk):
-    # Find the last occurrence of '.', '?', or '!' to split the chunk
-    for i in range(len(chunk) - 1, -1, -1):
-        if chunk[i] in ['.', '?', '!']:
-            return i + 1  # Include the punctuation
-    return None
+def copy_text_to_files(input_file, output_folder, max_chars=4800):
+    """
+    Recursively copy text from an input file to output files in a specified folder.
+    Each output file will contain up to max_chars characters.
+    If the last character is not a sentence-ending punctuation mark, look backward
+    to the nearest such punctuation mark.
+    """
+    # Create the output folder if it doesn't exist
+    os.makedirs(output_folder, exist_ok=True)
 
-def split_file(input_file, max_chars):
-    # Create output folder if it doesn't exist
-    output_folder = 'output'
-    if not os.path.exists(output_folder):
-        os.makedirs(output_folder)
-
+    # Read the input file
     with open(input_file, 'r') as f:
-        lines = filter(lambda x: x.strip(), f.readlines())
+        text = f.read()
 
-    sections = {}
-    current_section = None
-    for line in lines:
-        if line.strip().startswith("Section"):
-            current_section = line.strip()
-            sections[current_section] = ""
-        elif current_section:
-            sections[current_section] += line
+    # Define sentence-ending punctuation marks
+    end_punctuation = ['.', '?', '!']
 
-    # Split sections into chunks
-    for section, content in sections.items():
-        chunks = []
-        current_chunk = ""
-        current_length = 0
-        for line in content.split('\n'):
-            if current_length + len(line) <= max_chars:
-                current_chunk += line + '\n'
-                current_length += len(line)
-            else:
-                boundary_index = find_sentence_boundary(current_chunk)
-                if boundary_index is not None:
-                    chunks.append(current_chunk[:boundary_index].strip())
-                    current_chunk = current_chunk[boundary_index:]
-                    current_length = len(current_chunk)
-                else:
-                    chunks.append(current_chunk.strip())
-                    current_chunk = line + '\n'
-                    current_length = len(line)
+    # Initialize variables
+    start = 0
+    end = max_chars
+    file_count = 1
 
-        # Add the last chunk
-        if current_chunk:
-            chunks.append(current_chunk.strip())
+    while start < len(text):
+        # Check if the last character is a sentence-ending punctuation mark
+        if text[end - 1] in end_punctuation:
+            # Write the text to an output file
+            with open(os.path.join(output_folder, f'output_{file_count}.txt'), 'w') as out_file:
+                out_file.write(text[start:end])
+        else:
+            # Find the nearest sentence-ending punctuation mark backward
+            while end > start and text[end - 1] not in end_punctuation:
+                end -= 1
 
-        # Write chunks to files
-        for i, chunk in enumerate(chunks):
-            output_file = os.path.join(output_folder, f"{os.path.splitext(input_file)[0]}_{section.replace(' ', '').replace(':', '')}_part{i+1}.txt")
-            with open(output_file, 'w') as f:
-                f.write(f"{section} - Part {chr(ord('a') + i)}\n\n{chunk}")
+            # Write the text up to the found punctuation mark to an output file
+            with open(os.path.join(output_folder, f'output_{file_count}.txt'), 'w') as out_file:
+                out_file.write(text[start:end])
 
-# Example usage:
+            # Update the start and end indices for the next file
+            start = end
+            end = start + max_chars
+
+        # Update the file count
+        file_count += 1
+
+# Example usage
 input_file = 'input.txt'
-max_chars = 4800  # Adjust this value as needed
-split_file(input_file, max_chars)
+output_folder = 'output'
+copy_text_to_files(input_file, output_folder)
