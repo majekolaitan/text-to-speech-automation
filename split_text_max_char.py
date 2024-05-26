@@ -28,16 +28,20 @@ def copy_text_to_files(input_file, output_folder, max_chars=4800):
             # Check if the last character is a sentence-ending punctuation mark
             if text[end - 1] in end_punctuation:
                 # Write the text to an output file
-                with open(os.path.join(output_folder, f'output_{file_count}.txt'), 'w') as out_file:
+                output_file = os.path.join(output_folder, f'output_{file_count}.txt')
+                with open(output_file, 'w') as out_file:
                     out_file.write(text[start:end])
+                    print(f"File '{output_file}' has {len(text[start:end])} characters.")
             else:
                 # Find the nearest sentence-ending punctuation mark backward
                 while end > start and text[end - 1] not in end_punctuation:
                     end -= 1
 
                 # Write the text up to the found punctuation mark to an output file
-                with open(os.path.join(output_folder, f'output_{file_count}.txt'), 'w') as out_file:
+                output_file = os.path.join(output_folder, f'output_{file_count}.txt')
+                with open(output_file, 'w') as out_file:
                     out_file.write(text[start:end])
+                    print(f"File '{output_file}' has {len(text[start:end])} characters.")
 
                 # Update the start and end indices for the next file
                 start = end
@@ -47,8 +51,10 @@ def copy_text_to_files(input_file, output_folder, max_chars=4800):
             file_count += 1
         else:
             # If the end index is out of bounds, write the remaining text to a file
-            with open(os.path.join(output_folder, f'output_{file_count}.txt'), 'w') as out_file:
+            output_file = os.path.join(output_folder, f'output_{file_count}.txt')
+            with open(output_file, 'w') as out_file:
                 out_file.write(text[start:])
+                print(f"File '{output_file}' has {len(text[start:])} characters.")
             break
 
 # Example usage
