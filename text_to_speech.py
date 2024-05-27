@@ -95,4 +95,15 @@ for file_name in file_names:
     WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, "tts-tarea")))
     WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, "ttsGenerateBtn")))
 
+# Find all <a> elements
+elements = driver.find_elements(By.CSS_SELECTOR, "#blastered_datatable > tbody > tr > td:nth-child(7) > a")
+
+# Extract href attributes from each element
+hrefs = [element.get_attribute("href") for element in elements]
+
+# Write the hrefs to a file: "download_urls.txt"
+with open("download_urls.txt", "w") as file:
+    for href in hrefs:
+        file.write(href + "\n")
+
 driver.quit()
