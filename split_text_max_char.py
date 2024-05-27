@@ -23,26 +23,33 @@ def copy_text_to_files(input_file, output_folder, max_chars=4800):
     file_count = 1
 
     while start < len(text):
-        # Check if the last character is a sentence-ending punctuation mark
-        if text[end - 1] in end_punctuation:
-            # Write the text to an output file
-            with open(os.path.join(output_folder, f'output_{file_count}.txt'), 'w') as out_file:
-                out_file.write(text[start:end])
+        # Check if the end index is within the bounds of the string
+        if end <= len(text):
+            # Check if the last character is a sentence-ending punctuation mark
+            if text[end - 1] in end_punctuation:
+                # Write the text to an output file
+                with open(os.path.join(output_folder, f'output_{file_count}.txt'), 'w') as out_file:
+                    out_file.write(text[start:end])
+            else:
+                # Find the nearest sentence-ending punctuation mark backward
+                while end > start and text[end - 1] not in end_punctuation:
+                    end -= 1
+
+                # Write the text up to the found punctuation mark to an output file
+                with open(os.path.join(output_folder, f'output_{file_count}.txt'), 'w') as out_file:
+                    out_file.write(text[start:end])
+
+                # Update the start and end indices for the next file
+                start = end
+                end = start + max_chars
+
+            # Update the file count
+            file_count += 1
         else:
-            # Find the nearest sentence-ending punctuation mark backward
-            while end > start and text[end - 1] not in end_punctuation:
-                end -= 1
-
-            # Write the text up to the found punctuation mark to an output file
+            # If the end index is out of bounds, write the remaining text to a file
             with open(os.path.join(output_folder, f'output_{file_count}.txt'), 'w') as out_file:
-                out_file.write(text[start:end])
-
-            # Update the start and end indices for the next file
-            start = end
-            end = start + max_chars
-
-        # Update the file count
-        file_count += 1
+                out_file.write(text[start:])
+            break
 
 # Example usage
 input_file = 'input.txt'
