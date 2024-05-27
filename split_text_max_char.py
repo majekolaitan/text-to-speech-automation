@@ -11,7 +11,7 @@ def remove_empty_lines(text):
     cleaned_text = '\n'.join(non_empty_lines)
     return cleaned_text
 
-def copy_text_to_files(input_file, output_folder, max_chars=4800):
+def split_text_max_char(input_file, output_folder, max_chars):
     """
     Recursively copy text from an input file to output files in a specified folder.
     Each output file will contain up to max_chars characters.
@@ -91,11 +91,8 @@ def copy_text_to_files(input_file, output_folder, max_chars=4800):
     # Verify the total character count with the input file
     input_char_count = len(cleaned_text)
     if total_char_count == input_char_count:
-        print("The total character count across all output files matches the input file.")
+        print("The total character count across all output files matches the input file...............")
     else:
         print("The total character count across all output files does not match the input file.")
 
-# Example usage
-input_file = 'input.txt'
-output_folder = 'output'
-copy_text_to_files(input_file, output_folder)
+

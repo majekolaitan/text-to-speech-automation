@@ -2,12 +2,10 @@ import os
 import re
 from pathlib import Path
 
-def rename_output_files():
-    # Define the directory containing the files
-    directory = "output"
+def rename_output_files(output_folder):
 
     # Get a list of all files in the directory
-    files = os.listdir(directory)
+    files = os.listdir(output_folder)
 
     # Sort the files numerically
     files.sort(key=lambda x: int(x.split('_')[1].split('.')[0]))
@@ -19,7 +17,7 @@ def rename_output_files():
     # Loop through each file
     for filename in files:
         # Construct the full file path
-        file_path = os.path.join(directory, filename)
+        file_path = os.path.join(output_folder, filename)
 
         # Open the file and read its contents
         with open(file_path, "r") as f:
@@ -50,8 +48,5 @@ def rename_output_files():
             part_number += 1
             new_filename = f"Section {current_section} - Part {part_number}.txt"
 
-        new_file_path = os.path.join(directory, new_filename)
+        new_file_path = os.path.join(output_folder, new_filename)
         os.rename(file_path, new_file_path)
-
-if __name__ == "__main__":
-    rename_output_files()

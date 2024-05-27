@@ -1,20 +1,13 @@
 import os
 import re
 
-def split_text_heading():
-    # Define the regex pattern
-    pattern = r'\nLesson\s.*?(?=\nLesson\s|\Z)'
+def split_text_heading(input_file, output_folder, heading_regex):
 
-    # Read input text from a file
-    file_path = 'input.txt'
-    with open(file_path, 'r') as file:
+    with open(input_file, 'r') as file:
         text = file.read()
 
-    # Find all matches
-    matches = re.finditer(pattern, text, re.DOTALL)
+    matches = re.finditer(heading_regex, text, re.DOTALL)
 
-    # Create output folder if it doesn't exist
-    output_folder = 'output'
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 
@@ -24,6 +17,3 @@ def split_text_heading():
         output_file = os.path.join(output_folder, f"Lesson_{i}.txt")
         with open(output_file, 'w') as f:
             f.write(lesson_content.strip())
-
-if __name__ == "__main__":
-    split_text_heading()
